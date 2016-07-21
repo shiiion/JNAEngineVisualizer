@@ -15,6 +15,11 @@ public class CoreThread implements Runnable
 	private Pointer e2;
 	private Pointer e3;
 	private Pointer e4;
+	private Pointer e5;
+	private Pointer e6;
+	private Pointer e7;
+	private Pointer e8;
+	private Pointer e9;
 	private CoreDLL nst;
 	
 	public interface CoreDLL extends Library
@@ -36,46 +41,48 @@ public class CoreThread implements Runnable
 		bufferGraphics = g;
 		nst = CoreDLL.INSTANCE;
 		nst.startCore();
-		e1 = nst.createAddEntity(0, 0   , 0, (float)Math.toRadians(0), (float)Math.toRadians(0), (float)Math.toRadians(0), 0, 0, 0, 100, 0.5f, 100f, 1, 0, 1);
-		e2 = nst.createAddEntity(0, 15f, 0, 0   , 0, 0   , 30, 0, 0, 5f, 5f, 5f, 0, 1, 1);
-		e3 = nst.createAddEntity(0, 3.5f, 0, 0, 0, 0, 0, 0, 0, 0.5f, 0.5f, 0.5f, 0.5f, 1, 1);
-		e4 = nst.createAddEntity(0, 6.5f, 0, 0, 0, 0, 0, 0, 0, 0.5f, 0.5f, 0.5f, 0.5f, 1, 1);
-		Globals.camera.pos = new Vector3(10, -5, -20);
+		e1 = nst.createAddEntity(0, 0, 0, (float)Math.toRadians(0), (float)Math.toRadians(0), (float)Math.toRadians(0), 0, 0, 0, 100, 1.f, 100f, 0, 0, 1);
+		e2 = nst.createAddEntity(0, 5f, 0, 0, 0, 0, 0, 0, 0, 1.f, 1.f, 1.f, 0, 1, 1);
+		e3 = nst.createAddEntity(2, 5f, 0, 0, 0, 0, 0, 0, 0, 1.f, 1.f, 1.f, 0, 1, 1);
+		e4 = nst.createAddEntity(4, 5f, 0, 0, 0, 0, 0, 0, 0, 1.f, 1.f, 1.f, 0, 1, 1);
+		e5 = nst.createAddEntity(6, 5f, 0, 0, 0, 0, 0, 0, 0, 1.f, 1.f, 1.f, 0, 1, 1);
+		e6 = nst.createAddEntity(8, 5f, 0, 0, 0, 0, 0, 0, 0, 1.f, 1.f, 1.f, 0, 1, 1);
+		e7 = nst.createAddEntity(10, 5f, 0, 0, 0, 0, 0, 0, 0, 1.f, 1.f, 1.f, 0, 1, 1);
+		e8 = nst.createAddEntity(12, 5f, 0, 0, 0, 0, 0, 0, 0, 1.f, 1.f, 1.f, 0, 1, 1);
+		e9 = nst.createAddEntity(47, 5f, 0, 0, 0, 0, -10, 0, 0, 1.f, 1.f, 1.f, 0, 1, 1);
+		Globals.camera.pos = new Vector3(6, -5, -40);
+		
+		
 	}
 	
-	private void DrawAxes(Graphics2D g)
+	
+	
+	private void DrawWorld(Graphics2D g)
 	{
-		float x = nst.getEntityLoc(e1, 0), y = -nst.getEntityLoc(e1, 1), z = nst.getEntityLoc(e1, 2) + 15;
-		Vector3 c1 = new Vector3(x, y, z);
-		Vector3 xa1 = new Vector3(nst.getAxis(e1, 0, 0), -nst.getAxis(e1, 0, 1), nst.getAxis(e1, 0, 2));
-		Vector3 ya1 = new Vector3(nst.getAxis(e1, 1, 0), -nst.getAxis(e1, 1, 1), nst.getAxis(e1, 1, 2));
-		Vector3 za1 = new Vector3(nst.getAxis(e1, 2, 0), -nst.getAxis(e1, 2, 1), nst.getAxis(e1, 2, 2));
-		
-		x = nst.getEntityLoc(e2, 0); y = -nst.getEntityLoc(e2, 1); z = nst.getEntityLoc(e2, 2) + 15;
-		Vector3 c2 = new Vector3(x, y, z);
-		Vector3 xa2 = new Vector3(nst.getAxis(e2, 0, 0), -nst.getAxis(e2, 0, 1), nst.getAxis(e2, 0, 2));
-		Vector3 ya2 = new Vector3(nst.getAxis(e2, 1, 0), -nst.getAxis(e2, 1, 1), nst.getAxis(e2, 1, 2));
-		Vector3 za2 = new Vector3(nst.getAxis(e2, 2, 0), -nst.getAxis(e2, 2, 1), nst.getAxis(e2, 2, 2));
-		
-		x = nst.getEntityLoc(e3, 0); y = -nst.getEntityLoc(e3, 1); z = nst.getEntityLoc(e3, 2) + 15;
-		Vector3 c3 = new Vector3(x, y, z);
-		Vector3 xa3 = new Vector3(nst.getAxis(e3, 0, 0), nst.getAxis(e3, 0, 1), nst.getAxis(e3, 0, 2));
-		Vector3 ya3 = new Vector3(nst.getAxis(e3, 1, 0), nst.getAxis(e3, 1, 1), nst.getAxis(e3, 1, 2));
-		Vector3 za3 = new Vector3(nst.getAxis(e3, 2, 0), nst.getAxis(e3, 2, 1), nst.getAxis(e3, 2, 2));
-		
-		x = nst.getEntityLoc(e4, 0); y = -nst.getEntityLoc(e4, 1); z = nst.getEntityLoc(e4, 2) + 15;
-		Vector3 c4 = new Vector3(x, y, z);
-		Vector3 xa4 = new Vector3(nst.getAxis(e3, 0, 0), nst.getAxis(e3, 0, 1), nst.getAxis(e3, 0, 2));
-		Vector3 ya4 = new Vector3(nst.getAxis(e3, 1, 0), nst.getAxis(e3, 1, 1), nst.getAxis(e3, 1, 2));
-		Vector3 za4 = new Vector3(nst.getAxis(e3, 2, 0), nst.getAxis(e3, 2, 1), nst.getAxis(e3, 2, 2));
-
-		DrawAxes2(g, c1, xa1, ya1, za1);
-		DrawAxes2(g, c2, xa2, ya2, za2);
-		DrawAxes2(g, c3, xa3, ya3, za3);
-		DrawAxes2(g, c4, xa4, ya4, za4);
+		DrawEntity(e1, g);
+		DrawEntity(e2, g);
+		DrawEntity(e3, g);
+		DrawEntity(e4, g);
+		DrawEntity(e5, g);
+		DrawEntity(e6, g);
+		DrawEntity(e7, g);
+		DrawEntity(e8, g);
+		DrawEntity(e9, g);
 	}
 
-	private void DrawAxes2(Graphics2D g, Vector3 center, Vector3 xAxis, Vector3 yAxis, Vector3 zAxis)
+	private void DrawEntity(Pointer entity, Graphics2D g)
+	{
+		float x, y, z;
+		x = nst.getEntityLoc(entity, 0); y = -nst.getEntityLoc(entity, 1); z = nst.getEntityLoc(entity, 2) + 15;
+		Vector3 c = new Vector3(x, y, z);
+		Vector3 xa = new Vector3(nst.getAxis(entity, 0, 0), -nst.getAxis(entity, 0, 1), nst.getAxis(entity, 0, 2));
+		Vector3 ya = new Vector3(nst.getAxis(entity, 1, 0), -nst.getAxis(entity, 1, 1), nst.getAxis(entity, 1, 2));
+		Vector3 za = new Vector3(nst.getAxis(entity, 2, 0), -nst.getAxis(entity, 2, 1), nst.getAxis(entity, 2, 2));
+		
+		DrawBox(g, c, xa, ya, za);
+	}
+	
+	private void DrawBox(Graphics2D g, Vector3 center, Vector3 xAxis, Vector3 yAxis, Vector3 zAxis)
 	{
 		g.setColor(new Color(0xFFFFFFFF));
 
@@ -115,24 +122,29 @@ public class CoreThread implements Runnable
 		if(p8.z > 0 && p1.z > 0)
 			g.drawLine((int)p8.x, (int)p8.y, (int)p5.x, (int)p5.y);
 		
-		Vector3 pc = Math3D.Perspective(center);
-		if(pc.z > 0)
-		{
-			g.drawString("X: " + center.x, (int)pc.x, (int)pc.y);
-			g.drawString("Y: " + center.y, (int)pc.x, (int)pc.y + 13);
-			g.drawString("Z: " + center.z, (int)pc.x, (int)pc.y + 26);
-		}
+//		Vector3 pc = Math3D.Perspective(center);
+//		if(pc.z > 0)
+//		{
+//			g.drawString("X: " + center.x, (int)pc.x, (int)pc.y);
+//			g.drawString("Y: " + center.y, (int)pc.x, (int)pc.y + 13);
+//			g.drawString("Z: " + center.z, (int)pc.x, (int)pc.y + 26);
+//		}
 	}
 
 	public void run()
 	{
-		Globals.camera.yaw = 0;
+		Globals.camera.yaw = 0;try {
+			Thread.sleep(3000);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		while(running)
 		{
 			Globals.frameBufferLock.lock();
 			Globals.inputLock.lock();
 			nst.tickCore();
-			DrawAxes(bufferGraphics);
+			DrawWorld(bufferGraphics);
 			Globals.inputLock.unlock();
 			Globals.frameBufferLock.unlock();
 			
