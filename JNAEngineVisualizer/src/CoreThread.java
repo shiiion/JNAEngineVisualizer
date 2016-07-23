@@ -1,5 +1,6 @@
 import java.awt.Color;
 import java.awt.Graphics2D;
+import java.util.ArrayList;
 
 import com.sun.jna.Library;
 import com.sun.jna.Native;
@@ -11,26 +12,18 @@ public class CoreThread implements Runnable
 	private volatile boolean running;
 	private Graphics2D bufferGraphics;
 
-	private Pointer e1;
-	private Pointer e2;
-	private Pointer e3;
-	private Pointer e4;
-	private Pointer e5;
-	private Pointer e6;
-	private Pointer e7;
-	private Pointer e8;
-	private Pointer e9;
+	private ArrayList<Pointer> entities;
 	private CoreDLL nst;
-	
+
 	public interface CoreDLL extends Library
 	{
 		CoreDLL INSTANCE = (CoreDLL)Native.loadLibrary("core.dll", CoreDLL.class);
-		
+
 		void startCore();
 		void tickCore();
 		void sleepTickTime();
-		Pointer createAddEntity(float x, float y, float z, float xr, float yr, float zr, float xv, float yv, float zv, float xe, float ye, float ze, float rebound, int dynamic, float mass);
-		
+		Pointer createAddEntity(float x, float y, float z, float xr, float yr, float zr, float xv, float yv, float zv, float xe, float ye, float ze, float rebound, int dynamic, float mass, float friction);
+
 		float getEntityLoc(Pointer entity, int ind);
 		float getAxis(Pointer entity, int ind, int ind2);
 	}
@@ -41,33 +34,34 @@ public class CoreThread implements Runnable
 		bufferGraphics = g;
 		nst = CoreDLL.INSTANCE;
 		nst.startCore();
-		e1 = nst.createAddEntity(0, 0, 0, (float)Math.toRadians(0), (float)Math.toRadians(0), (float)Math.toRadians(0), 0, 0, 0, 100, 1.f, 100f, 0, 0, 1);
-		e2 = nst.createAddEntity(0, 5f, 0, 0, 0, 0, 0, 0, 0, 1.f, 1.f, 1.f, 0, 1, 1);
-		e3 = nst.createAddEntity(2, 5f, 0, 0, 0, 0, 0, 0, 0, 1.f, 1.f, 1.f, 0, 1, 1);
-		e4 = nst.createAddEntity(4, 5f, 0, 0, 0, 0, 0, 0, 0, 1.f, 1.f, 1.f, 0, 1, 1);
-		e5 = nst.createAddEntity(6, 5f, 0, 0, 0, 0, 0, 0, 0, 1.f, 1.f, 1.f, 0, 1, 1);
-		e6 = nst.createAddEntity(8, 5f, 0, 0, 0, 0, 0, 0, 0, 1.f, 1.f, 1.f, 0, 1, 1);
-		e7 = nst.createAddEntity(10, 5f, 0, 0, 0, 0, 0, 0, 0, 1.f, 1.f, 1.f, 0, 1, 1);
-		e8 = nst.createAddEntity(12, 5f, 0, 0, 0, 0, 0, 0, 0, 1.f, 1.f, 1.f, 0, 1, 1);
-		e9 = nst.createAddEntity(47, 5f, 0, 0, 0, 0, -10, 0, 0, 1.f, 1.f, 1.f, 0, 1, 1);
+		entities = new ArrayList<Pointer>();
+//		entities.add(nst.createAddEntity(0, 0, 0, 0.1f, 0, 0, 0, 0, 0, 100, 1.f, 100f, 0, 0, 1, 100));
+		//entities.add(nst.createAddEntity(0, 0, 0, 0, 0, 0, 10f, 0, 0, 30.f, 1.f, 30.f, 0, 1, 1f, 0.01f));
+//		entities.add(nst.createAddEntity(0, 7, 0, 0, 0, 0, 10, 0, 0, 1.f, 1.f, 1.f, 0, 1, 1f, 100));
+		entities.add(nst.createAddEntity(0, -10, 0, 0, 0, 0, 0, 0, 0, 100, 1.f, 100f, 1, 0, 1, 100));
+		for (int x = -20; x <= 20; x += 3) {
+			for (int y = 5; y <= 45; y += 3) {
+				float rnd = (float)Math.random() * 40 - 20;
+				float xv = 0 - x;
+				float yv = 0 - y;
+				float zv = 0 - rnd;
+				entities.add(nst.createAddEntity((float)x, (float)y, (float)rnd, 0, 0, 0, xv, yv, zv, 1.f, 1.f, 1.f, 1, 1, 1f, 10f));
+			}
+		}
+		
 		Globals.camera.pos = new Vector3(6, -5, -40);
-		
-		
+
+
 	}
-	
-	
-	
+
+
+
 	private void DrawWorld(Graphics2D g)
 	{
-		DrawEntity(e1, g);
-		DrawEntity(e2, g);
-		DrawEntity(e3, g);
-		DrawEntity(e4, g);
-		DrawEntity(e5, g);
-		DrawEntity(e6, g);
-		DrawEntity(e7, g);
-		DrawEntity(e8, g);
-		DrawEntity(e9, g);
+		for(Pointer e : entities)
+		{
+			DrawEntity(e, g);
+		}
 	}
 
 	private void DrawEntity(Pointer entity, Graphics2D g)
@@ -78,10 +72,10 @@ public class CoreThread implements Runnable
 		Vector3 xa = new Vector3(nst.getAxis(entity, 0, 0), -nst.getAxis(entity, 0, 1), nst.getAxis(entity, 0, 2));
 		Vector3 ya = new Vector3(nst.getAxis(entity, 1, 0), -nst.getAxis(entity, 1, 1), nst.getAxis(entity, 1, 2));
 		Vector3 za = new Vector3(nst.getAxis(entity, 2, 0), -nst.getAxis(entity, 2, 1), nst.getAxis(entity, 2, 2));
-		
+
 		DrawBox(g, c, xa, ya, za);
 	}
-	
+
 	private void DrawBox(Graphics2D g, Vector3 center, Vector3 xAxis, Vector3 yAxis, Vector3 zAxis)
 	{
 		g.setColor(new Color(0xFFFFFFFF));
@@ -121,33 +115,36 @@ public class CoreThread implements Runnable
 			g.drawLine((int)p7.x, (int)p7.y, (int)p8.x, (int)p8.y);
 		if(p8.z > 0 && p1.z > 0)
 			g.drawLine((int)p8.x, (int)p8.y, (int)p5.x, (int)p5.y);
-		
-//		Vector3 pc = Math3D.Perspective(center);
-//		if(pc.z > 0)
-//		{
-//			g.drawString("X: " + center.x, (int)pc.x, (int)pc.y);
-//			g.drawString("Y: " + center.y, (int)pc.x, (int)pc.y + 13);
-//			g.drawString("Z: " + center.z, (int)pc.x, (int)pc.y + 26);
-//		}
+
+				Vector3 pc = Math3D.Perspective(center);
+				if(pc.z > 0)
+				{
+					g.drawString("X: " + center.x, pc.x, pc.y);
+					g.drawString("Y: " + -center.y, pc.x, pc.y + 13);
+					g.drawString("Z: " + center.z, pc.x, pc.y + 26);
+				}
 	}
 
 	public void run()
 	{
-		Globals.camera.yaw = 0;try {
-			Thread.sleep(3000);
-		} catch (InterruptedException e) {
+		Globals.camera.yaw = 0;
+		try {
+			Thread.sleep(2500);
+		} catch (InterruptedException e1) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
+			e1.printStackTrace();
 		}
 		while(running)
 		{
 			Globals.frameBufferLock.lock();
 			Globals.inputLock.lock();
+			long ct = System.nanoTime();
 			nst.tickCore();
+			System.out.println((double)(System.nanoTime() - ct) / 1000000);
 			DrawWorld(bufferGraphics);
 			Globals.inputLock.unlock();
 			Globals.frameBufferLock.unlock();
-			
+
 			try
 			{
 				Thread.sleep(1);
