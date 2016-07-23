@@ -128,12 +128,7 @@ public class CoreThread implements Runnable
 	public void run()
 	{
 		Globals.camera.yaw = 0;
-		try {
-			Thread.sleep(2500);
-		} catch (InterruptedException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		}
+		
 		while(running)
 		{
 			Globals.frameBufferLock.lock();
